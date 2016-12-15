@@ -502,6 +502,15 @@ class catalog_KitService extends catalog_ProductService
 			{
 				$billingArea = $shop->getCurrentBillingArea();
 				$kititemPrice = $kititem->getDocumentService()->getKititemPrice($kititem, $shop, $billingArea, $targetIds, $orderLine->getQuantity());
+				
+				// Do not go further along if kititemPrice is null because it may wreak havoc with FATAL error
+				// on $kititemPrice->getValueWithTax() for example
+				if (null == $kititemPrice)
+				{
+					Framework::warn(__METHOD__.' | kititemPrice is null ! product #' . $product->getId() . ', label : ' . $product->getLabel() . ', ref : ' . $product->getCodeReference());
+					continue;	
+				}
+				
 				$kititemProduct = $kititem->getDefaultProduct();
 				$quantity = $kititem->getQuantity() * $orderLine->getQuantity();
 				$amountWithTax = $kititemPrice->getValueWithTax() * $quantity;
