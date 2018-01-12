@@ -168,7 +168,8 @@ class catalog_ReferencingService extends BaseService
 		}
 		
 		// Else generate it.
-		$label = $product->getShopPrimaryShelf($this->getCurrentShop())->getLabel();
+		$shopPrimaryShelf = $product->getShopPrimaryShelf($this->getCurrentShop());
+		$label = null !== $shopPrimaryShelf ? $shopPrimaryShelf->getLabel() : "";
 		return sprintf(self::TITLE_FORMAT_2, $product->getFullName(), $label, $this->getCurrentWebsiteLabel());
 	}
 	
@@ -197,7 +198,7 @@ class catalog_ReferencingService extends BaseService
 		
 		// Else return the parent shelf description.
 		$shelf = $product->getShopPrimaryShelf($this->getCurrentShop());
-		return $this->getPageDescriptionByShelf($shelf);
+		return null !== $shelf ? $this->getPageDescriptionByShelf($shelf) : "";
 	}
 	
 	/**
@@ -219,7 +220,8 @@ class catalog_ReferencingService extends BaseService
 	 */
 	public function getPathForUrlByProduct($product)
 	{
-		return $product->getShopPrimaryTopShelf($this->getCurrentShop())->getLabel();
+	    $shopPrimaryShelf = $product->getShopPrimaryTopShelf($this->getCurrentShop());
+	    return null !== $shopPrimaryShelf ? $shopPrimaryShelf->getLabel() : "";
 	}
 	
 	/**
